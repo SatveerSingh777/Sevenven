@@ -10,7 +10,7 @@ const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: "https://sevenven.onrender.com" }));
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
