@@ -5,7 +5,7 @@ function Ai_Engine(){
 
     const handleData = (data) =>{
         console.log(data);
-        const response = await fetch("http://localhost:5500/api/chat", {
+        const response = await fetch("${process.env.REACT_APP_BASE_URL}/api/ai", {
             method: "POST",
             headers: {
                         "Content-Type": "application/json"
