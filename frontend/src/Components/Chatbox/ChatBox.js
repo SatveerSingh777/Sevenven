@@ -10,60 +10,63 @@ function FormattedMessage({ content }) {
   while (i < lines.length) {
     const line = lines[i];
 
-    // Code block (```)
+    // Code block detection
     if (line.trim().startsWith('```')) {
       const codeLines = [];
       i++;
+      // Loop until the next code block markdown or the end of the text
       while (i < lines.length && !lines[i].trim().startsWith('```')) {
         codeLines.push(lines[i]);
         i++;
       }
       elements.push(
-        <pre key={i} className="msg-code">
+        <pre key={`code-${i}`} className="msg-code">
           <code>{codeLines.join('\n')}</code>
         </pre>
       );
+      i++; // Skip the closing backticks line if it exists
+      continue;
     }
     // Numbered list (1. 2. 3.)
     else if (/^\d+\.\s/.test(line.trim())) {
       const listItems = [];
       while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) {
-        listItems.push(<li key={i}>{lines[i].replace(/^\d+\.\s/, '')}</li>);
+        listItems.push(<li key={`li-num-${i}`}>{lines[i].replace(/^\d+\.\s/, '')}</li>);
         i++;
       }
-      elements.push(<ol key={i} className="msg-ol">{listItems}</ol>);
+      elements.push(<ol key={`ol-${i}`} className="msg-ol">{listItems}</ol>);
       continue;
     }
     // Bullet list (- or *)
     else if (/^[-*]\s/.test(line.trim())) {
       const listItems = [];
       while (i < lines.length && /^[-*]\s/.test(lines[i].trim())) {
-        listItems.push(<li key={i}>{lines[i].replace(/^[-*]\s/, '')}</li>);
+        listItems.push(<li key={`li-bull-${i}`}>{lines[i].replace(/^[-*]\s/, '')}</li>);
         i++;
       }
-      elements.push(<ul key={i} className="msg-ul">{listItems}</ul>);
+      elements.push(<ul key={`ul-${i}`} className="msg-ul">{listItems}</ul>);
       continue;
     }
     // Heading (**bold heading**)
     else if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
       elements.push(
-        <p key={i} className="msg-heading">
+        <p key={`head-${i}`} className="msg-heading">
           {line.trim().replace(/\*\*/g, '')}
         </p>
       );
     }
     // Empty line spacer
     else if (line.trim() === '') {
-      elements.push(<div key={i} className="msg-spacer" />);
+      elements.push(<div key={`space-${i}`} className="msg-spacer" />);
     }
     // Normal paragraph with inline bold support
     else {
       const parts = line.split(/(\*\*[^*]+\*\*)/g).map((part, j) =>
         part.startsWith('**') && part.endsWith('**')
-          ? <strong key={j}>{part.replace(/\*\*/g, '')}</strong>
+          ? <strong key={`str-${j}`}>{part.replace(/\*\*/g, '')}</strong>
           : part
       );
-      elements.push(<p key={i} className="msg-p">{parts}</p>);
+      elements.push(<p key={`p-${i}`} className="msg-p">{parts}</p>);
     }
 
     i++;

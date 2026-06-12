@@ -1,9 +1,13 @@
-*{
+/* ──────────────────────────────────────────────────────────────
+   1. GLOBAL RESET & BASE LAYOUT
+   ────────────────────────────────────────────────────────────── */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-.container{
+
+.container {
     width: 100%;
     height: 100vh;
     display: flex;
@@ -12,15 +16,21 @@
     flex-direction: column;
     background-color: #1e1e1e;
 }
-.head{
+
+.head {
     width: 90%;
     display: flex;
 }
-h1{
+
+h1 {
     color: #ffffff;
     font-size: 36px;
 }
-.chat-box{
+
+/* ──────────────────────────────────────────────────────────────
+   2. CHAT FEED & MESSAGE BUBBLES
+   ────────────────────────────────────────────────────────────── */
+.chat-box {
     width: 90%;
     height: 60vh;
     background-color: #2e2e2e;
@@ -34,45 +44,9 @@ h1{
     gap: 10px;
     scroll-behavior: smooth;
 }
-.input-area{
-    width:90%;
-    height: 100px;
-    background-color: #2e2e2e;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items:end;
-    justify-content: space-between;
-    padding: 10px 10px;
-    transition: height 0.3s ease;
-    overflow: hidden;
-}
-.input-area textarea{
-    width: 100%;
-    height: 70px;
-    min-height: 50px;   
-    background-color: transparent;
-    border: none;
-    outline: none;
-    color: white;
-    font-size: 18px;
-    padding: 0px;
-    resize: none;      
-}
-button{
-    width: 100px;
-    height: 40px;
-    background-color: #61dafb;
-    border: none;
-    border-radius: 5px;
-    color: #1e1e1e;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-}
 
-/* Base message style */
-.Msg{
+/* Base message layout */
+.Msg {
     width: fit-content;
     max-width: 75%;
     height: auto;
@@ -80,7 +54,8 @@ button{
     color: white;
     padding: 10px 14px;
     line-height: 1.5;
-    word-wrap: break-word;
+    overflow-wrap: break-word; /* Modern standard alternative to word-wrap */
+    word-break: break-word;
 }
 
 /* User messages — right side */
@@ -97,9 +72,118 @@ button{
     color: #e8e8ff;
     align-self: flex-start;
     border-bottom-left-radius: 2px;
+    /* Prevents code elements from blowing out flex boundaries */
+    min-width: 0; 
 }
 
-/* Loading dots animation */
+/* ──────────────────────────────────────────────────────────────
+   3. INNER AI MARKDOWN FORMATTING (FIXES OVERFLOWS)
+   ────────────────────────────────────────────────────────────── */
+.msg-formatted {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0; /* Critical flex constraint */
+}
+
+.msg-p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.msg-heading {
+    margin: 4px 0 2px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #c8caff;
+    letter-spacing: 0.3px;
+}
+
+.msg-ul,
+.msg-ol {
+    padding-left: 20px;
+    margin: 2px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.msg-ul li,
+.msg-ol li {
+    line-height: 1.5;
+}
+
+/* Code layout block — fixed scaling limits */
+.msg-code {
+    width: 100%;
+    max-width: 100%;
+    background-color: #1e1e2e;
+    border: 1px solid #44475a;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 4px 0;
+    
+    /* Horizontal Scrollbar Rules */
+    overflow-x: auto;
+    white-space: pre;
+    
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    color: #cdd6f4;
+}
+
+.msg-spacer {
+    height: 4px;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   4. USER INPUT UTILITIES & FOOTER
+   ────────────────────────────────────────────────────────────── */
+.input-area {
+    width: 90%;
+    height: 100px;
+    background-color: #2e2e2e;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 10px;
+    transition: height 0.3s ease;
+    overflow: hidden;
+}
+
+.input-area textarea {
+    width: 100%;
+    height: 70px;
+    min-height: 50px;   
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 18px;
+    padding: 0px;
+    resize: none;      
+}
+
+button {
+    width: 100px;
+    height: 40px;
+    background-color: #61dafb;
+    border: none;
+    border-radius: 5px;
+    color: #1e1e1e;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   5. UTILITIES (LOADING & ERRORS)
+   ────────────────────────────────────────────────────────────── */
 .Msg.loading {
     display: flex;
     gap: 5px;
@@ -126,62 +210,7 @@ button{
     40%           { opacity: 1;   transform: scale(1.2); }
 }
 
-/* Error message styling */
 .Msg.error {
     opacity: 0.75;
     border-left: 3px solid #e74c3c;
-}
-
-/* ── Formatted message styles ── */
-.msg-formatted {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  width: 100%;
-}
-
-.msg-p {
-  margin: 0;
-  line-height: 1.6;
-  
-}
-
-.msg-heading {
-  margin: 4px 0 2px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #c8caff;
-  letter-spacing: 0.3px;
-}
-
-.msg-ul,
-.msg-ol {
-  padding-left: 20px;
-  margin: 2px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.msg-ul li,
-.msg-ol li {
-  line-height: 1.5;
-}
-
-.msg-code {
-  background-color: #1e1e2e;
-  border: 1px solid #44475a;
-  border-radius: 6px;
-  padding: 10px 14px;
-  overflow-x: auto;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 13px;
-  color: #cdd6f4;
-  white-space: pre;
-  margin: 4px 0;
-}
-
-.msg-spacer {
-  height: 4px;
 }
