@@ -22,10 +22,9 @@ app.post("/api/ai", async (req, res) => {
   }
 
 try {
-  // Merge defaults: ensure max_tokens is set high enough for code
   const body = {
-    max_tokens: 4096,        // Add this default
-    ...req.body,             // Allow client overrides
+    max_tokens: 4096,      
+    ...req.body,            
   };
 
   const response = await axios.post(

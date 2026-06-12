@@ -20,6 +20,9 @@
 .head {
     width: 90%;
     display: flex;
+    height: fit-content;
+    /* border:2px solid #44475a; */
+    margin:2px;
 }
 
 h1 {
@@ -32,7 +35,7 @@ h1 {
    ────────────────────────────────────────────────────────────── */
 .chat-box {
     width: 90%;
-    height: 60vh;
+    height: 70vh;
     background-color: #2e2e2e;
     border-radius: 10px;
     display: flex;
@@ -43,6 +46,7 @@ h1 {
     overflow-y: auto;
     gap: 10px;
     scroll-behavior: smooth;
+    margin: 2px;
 }
 
 /* Base message layout */
@@ -56,6 +60,7 @@ h1 {
     line-height: 1.5;
     overflow-wrap: break-word; /* Modern standard alternative to word-wrap */
     word-break: break-word;
+    margin:2px;
 }
 
 /* User messages — right side */
