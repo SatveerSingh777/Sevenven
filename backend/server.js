@@ -21,20 +21,26 @@ app.post("/api/ai", async (req, res) => {
     return res.status(500).json({ error: "Missing API credentials in environment variables." });
   }
 
-  try {
-    const response = await axios.post(
-      `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3.1-8b-instruct`,
-      req.body,
-      {
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+try {
+  // Merge defaults: ensure max_tokens is set high enough for code
+  const body = {
+    max_tokens: 4096,        // Add this default
+    ...req.body,             // Allow client overrides
+  };
 
-    res.json(response.data);
-  } catch (error) {
+  const response = await axios.post(
+    `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3.1-8b-instruct`,
+    body,
+    {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  res.json(response.data);
+} catch (error) {
     console.error("Error fetching data:", error.response?.data || error.message);
     res.status(500).json({ error: "Failed to fetch AI response." });
   }
