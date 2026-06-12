@@ -103,7 +103,7 @@ export default function ChatBox() {
     setLoading(true);
 
     try {
-      const response = await fetch("${process.env.REACT_APP_BASE_URL}/api/ai", {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/ai`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: updatedMessages }),
